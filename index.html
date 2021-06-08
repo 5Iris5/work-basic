@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>树形数据结构转换</title>
+    </head>
+
+    <body>
+        <script>
+            let initTable = [
+                {
+                    accountBooksId: 1,
+                    id: 1,
+                    parentId: -1,
+                    amountChild: [
+                        {
+                            conCreditCurrPeriodBalance: 100,
+                            creditCurrPeriodBalance: 200,
+                        },
+                        {
+                            conCreditCurrPeriodBalance: 500,
+                            creditCurrPeriodBalance: 600,
+                        },
+                    ],
+                    children: [
+                        {
+                            accountBooksId: 2,
+                            id: 2,
+                            parentId: 1,
+                            amountChild: [
+                                {
+                                    conCreditCurrPeriodBalance: 10,
+                                    creditCurrPeriodBalance: 20,
+                                },
+                            ],
+                            children: [
+                                {
+                                    accountBooksId: 3,
+                                    id: 3,
+                                    parentId: 2,
+                                    amountChild: [],
+                                    children: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+
+                {
+                    accountBooksId: 11,
+                    id: 11,
+                    parentId: -1,
+                    amountChild: [
+                        {
+                            conCreditCurrPeriodBalance: 120,
+                            creditCurrPeriodBalance: 60,
+                        },
+                        {
+                            conCreditCurrPeriodBalance: 70,
+                            creditCurrPeriodBalance: 130,
+                        },
+                        {
+                            conCreditCurrPeriodBalance: 110,
+                            creditCurrPeriodBalance: 230,
+                        },
+                    ],
+                    children: [
+                        {
+                            accountBooksId: 22,
+                            id: 22,
+                            parentId: 11,
+                            amountChild: [],
+                            children: [
+                                {
+                                    accountBooksId: 33,
+                                    id: 33,
+                                    parentId: 22,
+                                    amountChild: [
+                                        {
+                                            conCreditCurrPeriodBalance: 70,
+                                            creditCurrPeriodBalance: 130,
+                                        },
+                                        {
+                                            conCreditCurrPeriodBalance: 110,
+                                            creditCurrPeriodBalance: 230,
+                                        },
+                                    ],
+                                    children: [
+                                        {
+                                            accountBooksId: 44,
+                                            id: 44,
+                                            parentId: 33,
+                                            amountChild: [
+                                                {
+                                                    conCreditCurrPeriodBalance: 770,
+                                                    creditCurrPeriodBalance: 1130,
+                                                },
+                                            ],
+                                            children: [],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+
+                {
+                    accountBooksId: 111,
+                    id: 111,
+                    parentId: -1,
+                    amountChild: [],
+                    children: [
+                        {
+                            accountBooksId: 1111,
+                            id: 1111,
+                            parentId: 111,
+                            amountChild: [
+                                {
+                                    conCreditCurrPeriodBalance: 312,
+                                    creditCurrPeriodBalance: 3,
+                                },
+                            ],
+                            children: [
+                                {
+                                    accountBooksId: 1115,
+                                    id: 1115,
+                                    parentId: 1111,
+                                    amountChild: [
+                                        {
+                                            conCreditCurrPeriodBalance: 5012,
+                                            creditCurrPeriodBalance: 321,
+                                        },
+                                    ],
+                                    children: [],
+                                },
+                                {
+                                    accountBooksId: 1112,
+                                    id: 1112,
+                                    parentId: 1111,
+                                    amountChild: [],
+                                    children: [],
+                                },
+                            ],
+                        },
+                        {
+                            accountBooksId: 2111,
+                            id: 2111,
+                            parentId: 111,
+                            amountChild: [],
+                            children: [],
+                        },
+                    ],
+                },
+            ];
+
+            function resetTree(initTable) {
+                let treeLists = []; // 把amountChild里面的数据提出来
+                initTable.forEach((item) => {
+                    if (item.amountChild && item.amountChild.length) {
+                        item.amountChild.forEach((aItem, aIndex) => {
+                            treeLists.push({
+                                ...getCommons(item),
+                                children: aIndex === item.amountChild.length - 1 ? resetTree(item.children) : [],
+                                conCreditCurrPeriodBalance: aItem.conCreditCurrPeriodBalance,
+                                creditCurrPeriodBalance: aItem.creditCurrPeriodBalance,
+                            });
+                        });
+                    } else {
+                        treeLists.push({
+                            ...getCommons(item),
+                            children: resetTree(item.children),
+                            conCreditCurrPeriodBalance: 0,
+                            creditCurrPeriodBalance: 0,
+                        });
+                    }
+                });
+                return treeLists;
+            }
+            function getCommons(item) {
+                let obj = {
+                    accountBooksId: item.accountBooksId,
+                    id: item.id,
+                    parentId: item.parentId,
+                    amountChild: [],
+                };
+                return obj;
+            }
+
+            console.log(resetTree(initTable));
+        </script>
+    </body>
+</html>
